@@ -41,12 +41,30 @@ public class MsgServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		String action = request.getServletPath();
 		
-		try {
-			fetchMsg(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
+		switch(action) {
+		case "/fetch":
+			try {
+				fetchMsg(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		case "/getUsers":
+			try {
+				getUsers(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		default:
+			break;
 		}
+		
+		
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.getWriter().append(JSONresponse);
 		JSONresponse = null;
@@ -64,6 +82,14 @@ public class MsgServlet extends HttpServlet {
 		 ArrayList<UserMsg> in = null;
 		 in = userMsgDao.fetchMsg();
 		 JSONresponse = gson.toJson(in);
+		 System.out.println(JSONresponse);
+	 }
+	
+	private void getUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		 ArrayList<Integer> in = null;
+		 in = userMsgDao.getUsers();
+		 JSONresponse = gson.toJson(in);
+		 System.out.println(JSONresponse);
 	 }
 
 }
