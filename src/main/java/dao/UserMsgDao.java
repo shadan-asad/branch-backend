@@ -15,6 +15,7 @@ public class UserMsgDao {
 	private String password = "asad";
 	
 	private static final String SELECT_SQL = "SELECT * FROM user_message";
+	private static final String ALLUSERS_SQL = "SELECT DISTINCT user_id FROM user_message";
 	
 	protected Connection getConnection() {
 		Connection con = null;
@@ -31,25 +32,47 @@ public class UserMsgDao {
 	}
 	
 	public ArrayList<UserMsg> fetchMsg() throws SQLException {
+		
 		ArrayList<UserMsg> msgArr = new ArrayList<>();
 		
 		try(Connection con = getConnection();
 				PreparedStatement prepStmt = con.prepareStatement(SELECT_SQL)) {
 			
 			ResultSet rs = prepStmt.executeQuery();
-			
 			while(rs.next()) {
 				int userId = rs.getInt("user_id");
 				String timestamp = rs.getString("timestamp");
 				String msg = rs.getString("message_body");
-				
+			
 				msgArr.add(new UserMsg(userId, timestamp, msg));
 			}
+			
 				
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return msgArr;
+	}
+	
+	public ArrayList<Integer> getUsers() throws SQLException {
+		
+		ArrayList<Integer> usersArr = new ArrayList<>();
+		
+		try(Connection con = getConnection();
+				PreparedStatement prepStmt = con.prepareStatement(ALLUSERS_SQL)) {
+			
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				int userId = rs.getInt("user_id");
+				usersArr.add(userId);
+			}
+			
+				
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return usersArr;
 	}
 }
